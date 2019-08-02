@@ -3,22 +3,28 @@ var game = new Phaser.Game(790, 400, Phaser.AUTO, "game", actions);
 var score = -2;
 var labelScore;
 var labelheart;
-var heart = 100;
+var labela;
+var heart = 98;
 var player;
 var pipes = [];
 var pipeInterval = 1.5;
+var a = 0;
 function preload() {
   game.load.image("playerImg","../assets/flappy-cropped.png");
-  game.load.audio("score", "../assets/point.ogg");
-  game.load.image("pipe","../assets/pipe_orange.png");
+  game.load.image("pipe","../assets/pipe1.png");
   game.load.image("pipeEnd","../assets/pipe-end.png");
-  game.load.image("pipe2","../assets/pipe_orange.png");
-  game.load.image("pipeEnd2","../assets/pipe-end.png");
+  game.load.image("pipe2","../assets/pipe2.png");
+  game.load.image("pipeEnd2","../assets/pipe-end2.png");
+  game.load.image("background","../assets/timg.jpg");
+  game.load.audio("bgSound", "../assets/sans.mp3")
 }
 function create() {
-  game.stage.setBackgroundColor("#00FFFF");
-  labelScore = game.add.text(20, 20, "-2", {font: "60px Arial", fill: "#000000"});
-  labelheart = game.add.text(20, 80, "100", {font: "60px Arial", fill: "#ff0000"});
+  game.sound.play("bgSound");
+  background=game.add.image(0,0,"background");
+  background.scale.setTo(1,1);
+  labelScore = game.add.text(0, 400, "-2", {font: "10px Arial", fill: "#000000"});
+  labela = game.add.text(0, 400, "0", {font: "10px Arial", fill: "#000000"});
+  labelheart = game.add.text(85, 11, "98", {font: "40px Arial", fill: "#ff0000"});
   player = game.add.sprite(80, 200, "playerImg");
   game.physics.startSystem(Phaser.Physics.ARCADE);
   game.physics.arcade.enable(player);
@@ -37,7 +43,10 @@ function update() {
   if (player.y<=0-30 || player.y>=400){
     changeheart();
   }
-
+  if (a>=46){
+    game.sound.play("bgSound");
+    var a = 0;
+  }
 }
 
 function addPipeBlock(x, y) {
@@ -72,6 +81,7 @@ function generatePipe() {
      addPipeBlock(width, y);
    }
     changeScore();
+    changea();
     changeheart2();
   }
 
@@ -88,7 +98,6 @@ function addPipeEnd(x,y){
 
 function playerJump() {
   player.body.velocity.y = -300;
-  game.sound.play("score");
 }
 
 function changeScore() {
@@ -100,6 +109,9 @@ function changeheart2() {
   heart++;
   labelheart.setText(heart.toString());
 }
+function changea(){
+  a=a+1;
+  }
 
 function changeheart() {
   heart = heart - 1;
@@ -107,6 +119,6 @@ function changeheart() {
 }
 
 function gameOver() {
-  alert("You lost,try again!Your score is:"+score);
+  alert("You lost,try again!The number of seconds you insist on:"+score);
   location.reload()
 }
